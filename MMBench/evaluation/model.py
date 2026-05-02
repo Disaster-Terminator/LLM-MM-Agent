@@ -1,7 +1,10 @@
 import openai
 import backoff
 import re
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 completion_tokens = prompt_tokens = 0
 
@@ -26,7 +29,11 @@ def completions_with_backoff(client, messages, model, temperature, max_tokens, c
     return response
 
 
-def gpt(prompt, base_url="https://api.openai.com/v1", key='', model="gpt-4o", temperature=0.7, max_tokens=2000, n=1, stop=None, top_p=0.9):
+def gpt(prompt, base_url=None, key=None, model=None, temperature=0.7, max_tokens=2000, n=1, stop=None, top_p=0.9):
+    model = os.getenv("EVALUATION_MODEL", model or "gpt-4o")
+    key = os.getenv("OPENAI_API_KEY", key)
+    base_url = os.getenv("OPENAI_API_BASE", base_url or "https://api.openai.com/v1")
+    
     messages = [{"role": "user", "content": prompt}]
     client = openai.Client(api_key=key, base_url=base_url)
     result = generate(client, messages, model, temperature, max_tokens, n, stop,top_p)

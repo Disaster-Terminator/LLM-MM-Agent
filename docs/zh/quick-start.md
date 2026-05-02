@@ -50,7 +50,7 @@ python MMAgent/main.py \
 | `--task` | `2024_C` | `MMBench/problem/` 下的题目 ID |
 | `--key` | 空字符串 | 传给 LLM 包装器的 API Key |
 
-如果 `--key` 为空，`LLM` 初始化时会直接抛出 `ValueError`。
+如果命令行中 `--key` 为空，系统会自动尝试从你的环境变量（如 `OPENAI_API_KEY`）中读取。如果最终两者都为空，`LLM` 初始化时才会抛出 `ValueError`。
 
 ## 5. API Base 是怎么选的
 

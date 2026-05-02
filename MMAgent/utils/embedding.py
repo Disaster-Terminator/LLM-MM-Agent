@@ -40,6 +40,10 @@ class EmbeddingScorer:
         # Tokenize the input texts
         batch_dict = self.tokenizer(texts, max_length=8192, padding=True, truncation=True, return_tensors='pt')
         
+        # Add explicit position_ids to avoid out-of-bounds error with PyTorch/Transformers updates
+        position_ids = torch.arange(batch_dict['input_ids'].shape[1], dtype=torch.long).unsqueeze(0).expand_as(batch_dict['input_ids'])
+        batch_dict['position_ids'] = position_ids
+        
         # Get embeddings
         with torch.no_grad():
             outputs = self.model(**batch_dict)
